@@ -1,26 +1,12 @@
 { lib
 , copyDesktopItems
 , fetchFromGitHub
-, makeDesktopItem
 , stdenv
-, alsa-lib
-, gcc-unwrapped
-, git
 , godot_4
-, libGLU
-, libX11
-, libXcursor
-, libXext
-, libXfixes
-, libXi
-, libXinerama
-, libXrandr
-, libXrender
-, libglvnd
-, libpulseaudio
-, perl
-, zlib
-, udev # for libudev
+, xorg
+, stable
+, udev
+, x11vnc
 }:
 
 { pname
@@ -28,6 +14,7 @@
 , src
 , desktopItems ? [ ]
 , preset
+, rendering-driver ? "vulkan"
 }:
 
 stdenv.mkDerivation rec {
@@ -39,28 +26,20 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    alsa-lib
-    gcc-unwrapped.lib
-    git
-    libGLU
-    libX11
-    libXcursor
-    libXext
-    libXfixes
-    libXi
-    libXinerama
-    libXrandr
-    libXrender
-    libglvnd
-    libpulseaudio
-    perl
-    zlib
-    udev
+    xorg.libX11
+    xorg.libXcursor
+    xorg.libXext
+    xorg.libXinerama
+    xorg.libXrandr
+    xorg.libXi
+    stable.fontconfig # Wrong elf class 2.14.0 required
   ];
 
   postPatch = ''
     patchShebangs scripts
   '';
+
+  LD_LIBRARY_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
 
   buildPhase = ''
     runHook preBuild
@@ -68,7 +47,9 @@ stdenv.mkDerivation rec {
     export HOME=$TMPDIR
 
     mkdir -p $out/share/${pname}
-    godot4 --export-release "${preset}" $out/share/${pname}/${pname}
+    godot4 --rendering-driver ${rendering-driver} --export-release "${preset}" $out/share/${pname}/${pname}
+
+    echo $DISPLAY > $out/txt
 
     runHook postBuild
   '';
