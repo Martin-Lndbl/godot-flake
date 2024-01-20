@@ -1,2 +1,4 @@
 .direnv
+export_templates
+test
 */build
