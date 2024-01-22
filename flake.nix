@@ -33,10 +33,17 @@
           packages.default = packages.linux;
 
           packages.linux = pkgs.mkGodot {
-            pname = "template";
+            pname = "glin";
             version = "0.1.0";
             src = ./src;
             preset = "linux"; # You need to create this preset in godot
+          };
+
+          packages.windows = pkgs.mkGodot {
+            pname = "gwin";
+            version = "0.1.0";
+            src = ./src;
+            preset = "windows"; # You need to create this preset in godot
           };
 
           packages.android = pkgs.mkGodot {
@@ -47,6 +54,7 @@
           };
 
           packages.export_templates = pkgs.export_templates;
+          packages.makeLibraryPath = pkgs.makeLibraryPath;
 
           packages.tmp = pkgs.xorg.libXinerama;
 

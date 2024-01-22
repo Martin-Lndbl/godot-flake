@@ -46,8 +46,6 @@ stdenv.mkDerivation rec {
     patchShebangs scripts
   '';
 
-  LD_LIBRARY_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
-
   buildPhase = ''
     runHook preBuild
 
@@ -68,16 +66,16 @@ stdenv.mkDerivation rec {
     mkdir -p $out/bin
     ln -s $out/share/${pname}/${pname} $out/bin
 
-    interpreter=$(cat $NIX_CC/nix-support/dynamic-linker)
-    patchelf \
-      --set-interpreter $interpreter \
-      --set-rpath ${lib.makeLibraryPath buildInputs} \
-      $out/share/${pname}/${pname}
+    # interpreter=$(cat $NIX_CC/nix-support/dynamic-linker)
+    # patchelf \
+    #   --set-interpreter $interpreter \
+    #   --set-rpath ${lib.makeLibraryPath buildInputs} \
+    #   $out/share/${pname}/${pname}
 
-      patchelf --add-needed ${xorg.libX11}/lib/libX11.so $out/share/${pname}/${pname}
-      patchelf --add-needed ${xorg.libXcursor}/lib/libXcursor.so $out/share/${pname}/${pname}
-      patchelf --add-needed ${xorg.libXext}/lib/libXext.so $out/share/${pname}/${pname}
-      patchelf --add-needed ${xorg.libXi}/lib/libXi.so $out/share/${pname}/${pname}
+    #   patchelf --add-needed ${xorg.libX11}/lib/libX11.so $out/share/${pname}/${pname}
+    #   patchelf --add-needed ${xorg.libXcursor}/lib/libXcursor.so $out/share/${pname}/${pname}
+    #   patchelf --add-needed ${xorg.libXext}/lib/libXext.so $out/share/${pname}/${pname}
+    #   patchelf --add-needed ${xorg.libXi}/lib/libXi.so $out/share/${pname}/${pname}
 
     runHook postInstall
   '';
