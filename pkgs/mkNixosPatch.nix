@@ -1,20 +1,14 @@
 { lib
-, copyDesktopItems
-, fetchFromGitHub
 , stdenv
-, godot_4
-, xorg
-, stable
-, udev
-, x11vnc
-, vulkan-loader
-, libGLU
+, mkGodot
+, copyDesktopItems
 , installShellFiles
 , autoPatchelfHook
+, xorg
+, vulkan-loader
 , libGL
 , libxkbcommon
 , alsa-lib
-, mkGodot
 }:
 
 { pname
@@ -25,7 +19,7 @@
 }:
 
 let
-  app = mkGodot {
+  app = mkGodot { # TODO: This should be the same as the linux target
     inherit pname version src preset desktopItems;
   };
 in
