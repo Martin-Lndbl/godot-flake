@@ -1,14 +1,6 @@
 { lib
-, copyDesktopItems
-, fetchFromGitHub
 , stdenv
 , godot_4
-, xorg
-, stable
-, udev
-, x11vnc
-, vulkan-loader
-, libGLU
 , export_templates
 }:
 
@@ -17,30 +9,12 @@
 , src
 , desktopItems ? [ ]
 , preset
-, rendering-driver ? "vulkan"
 }:
 
 stdenv.mkDerivation rec {
   inherit pname version src desktopItems;
 
-  nativeBuildInputs = [
-    copyDesktopItems
-    godot_4
-  ];
-
-  buildInputs = [
-    xorg.libX11
-    xorg.libXcursor
-    xorg.libXext
-    xorg.libXinerama
-    xorg.libXrandr
-    xorg.libXi
-    xorg.libXfixes
-    xorg.libXrender
-    stable.fontconfig # Wrong elf class 2.14.0 required
-    libGLU
-    export_templates
-  ];
+  buildInputs = [ godot_4 ];
 
   postPatch = ''
     patchShebangs scripts
@@ -55,33 +29,35 @@ stdenv.mkDerivation rec {
     ln -s ${export_templates} /build/.local/share/godot/export_templates/4.2.1.stable
 
     mkdir -p $out/share/${pname}
-    godot4 --headless --rendering-driver ${rendering-driver} --export-release "${preset}" $out/share/${pname}/${pname}
+    godot4 --headless --export-release "${preset}" $out/share/${pname}/${pname}
 
     runHook postBuild
   '';
 
   installPhase = ''
-    runHook preInstall
+     runHook preInstall
 
-    platform=$(awk -F'=' '
-        $1 == "name" && $2 == "\"${preset}\"" {
-            getline;
-            if ($1 == "platform") {
-                gsub(/"/, "", $2);
-                print $2;
-                exit;
-            }
-        }' export_presets.cfg)
+     platform=$(awk -F'=' '
+         $1 == "name" && $2 == "\"${preset}\"" {
+             getline;
+             if ($1 == "platform") {
+                 gsub(/"/, "", $2);
+                 print $2;
+                 exit;
+             }
+         }' export_presets.cfg)
 
 
-    mkdir -p $out/bin
-    ln -s $out/share/${pname}/${pname} $out/bin
+     mkdir -p $out/bin
+     ln -s $out/share/${pname}/${pname} $out/bin
 
-    if [ "$platform" == "Linux/X11" ]; then
-      patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 \
-        $out/share/${pname}/${pname}
-    fi
+     if [ "$platform" == "Linux/X11" ]; then
+       patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 \
+         $out/share/${pname}/${pname}
+     elif [ "$platform" == "Windows Desktop" ]; then
+       mv $out/share/${pname}/${pname} $out/share/${pname}/${pname}.exe
+     fi
 
-    runHook postInstall
+     runHook postInstall
   '';
 }

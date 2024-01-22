@@ -30,24 +30,29 @@
         in
 
         rec {
-          packages.default = packages.linux;
+          apps.default = packages.nixos_template;
+          packages.nixos_template = pkgs.mkNixosPatch {
+            pname = "lin_template";
+            version = "0.1.0";
+            src = packages.lin_template;
+          };
 
-          packages.linux = pkgs.mkGodot {
-            pname = "glin";
+          packages.lin_template = pkgs.mkGodot {
+            pname = "lin_template";
             version = "0.1.0";
             src = ./src;
             preset = "linux"; # You need to create this preset in godot
           };
 
-          packages.windows = pkgs.mkGodot {
-            pname = "gwin";
+          packages.win_template = pkgs.mkGodot {
+            pname = "win_template";
             version = "0.1.0";
             src = ./src;
             preset = "windows"; # You need to create this preset in godot
           };
 
-          packages.android = pkgs.mkGodot {
-            pname = "template";
+          packages.andr_template = pkgs.mkGodot {
+            pname = "andr_template";
             version = "0.1.0";
             src = ./src;
             preset = "android"; # You need to create this preset in godot
@@ -55,8 +60,6 @@
 
           packages.export_templates = pkgs.export_templates;
           packages.makeLibraryPath = pkgs.makeLibraryPath;
-
-          packages.tmp = pkgs.xorg.libXinerama;
 
           devShell = pkgs.mkShell {
 
