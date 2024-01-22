@@ -20,9 +20,9 @@
             xorg.libXcursor
             xorg.libXinerama
             xorg.libXi
-            mesa
+            # mesa
             libGLU
-            libglvnd
+            # libglvnd
             alsa-lib
             pulseaudio
           ];
@@ -68,12 +68,6 @@
               vulkan-tools
               vulkan-loader
             ] ++ libs;
-            LD_LIBRARY_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
-
-            shellHook = ''
-              rm export_templates
-              ln -s ${pkgs.export_templates} ./export_templates
-            '';
           };
         }
       );

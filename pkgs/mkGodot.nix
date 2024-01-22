@@ -63,19 +63,24 @@ stdenv.mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
+    platform=$(awk -F'=' '
+        $1 == "name" && $2 == "\"${preset}\"" {
+            getline;
+            if ($1 == "platform") {
+                gsub(/"/, "", $2);
+                print $2;
+                exit;
+            }
+        }' export_presets.cfg)
+
+
     mkdir -p $out/bin
     ln -s $out/share/${pname}/${pname} $out/bin
 
-    # interpreter=$(cat $NIX_CC/nix-support/dynamic-linker)
-    # patchelf \
-    #   --set-interpreter $interpreter \
-    #   --set-rpath ${lib.makeLibraryPath buildInputs} \
-    #   $out/share/${pname}/${pname}
-
-    #   patchelf --add-needed ${xorg.libX11}/lib/libX11.so $out/share/${pname}/${pname}
-    #   patchelf --add-needed ${xorg.libXcursor}/lib/libXcursor.so $out/share/${pname}/${pname}
-    #   patchelf --add-needed ${xorg.libXext}/lib/libXext.so $out/share/${pname}/${pname}
-    #   patchelf --add-needed ${xorg.libXi}/lib/libXi.so $out/share/${pname}/${pname}
+    if [ "$platform" == "Linux/X11" ]; then
+      patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 \
+        $out/share/${pname}/${pname}
+    fi
 
     runHook postInstall
   '';
