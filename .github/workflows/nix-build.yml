@@ -27,8 +27,8 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: | 
-          nix build .#nixos_template
-          nix build .#windows_template
-          nix-shell --run "echo OK"
+      - name: Build linux binary + nixos wrapper
+        run: nix build .#nixos_template 
+          
+      - name: Build windows binary
+        run: nix build .#windows_template
