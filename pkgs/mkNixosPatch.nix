@@ -14,15 +14,8 @@
 { pname
 , version
 , src
-, preset
 , desktopItems ? [ ]
 }:
-
-let
-  app = mkGodot { # TODO: This should be the same as the linux target
-    inherit pname version src preset desktopItems;
-  };
-in
 
 stdenv.mkDerivation rec {
   inherit pname version src desktopItems;
@@ -56,7 +49,8 @@ stdenv.mkDerivation rec {
     runHook preInstall
 
     mkdir $out
-    cp -r ${app}/* $out
+    mv bin/* bin/${pname}
+    cp -r * $out
 
     runHook postInstall
   '';

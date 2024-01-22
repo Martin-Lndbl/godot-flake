@@ -15,35 +15,37 @@
             inherit system;
             overlays = [ (import ./overlays.nix { inherit inputs; }) ];
           };
+
+          version = "0.1.0";
+
         in
 
         rec {
           packages.default = packages.nixos_template;
 
           packages.nixos_template = pkgs.mkNixosPatch {
+            inherit version;
             pname = "nixos_template";
-            version = "0.1.0";
-            src = ./src;
-            preset = "linux";
+            src = packages.linux_template;
           };
 
           packages.linux_template = pkgs.mkGodot {
+            inherit version;
             pname = "linux_template";
-            version = "0.1.0";
             src = ./src;
             preset = "linux"; # You need to create this preset in godot
           };
 
           packages.windows_template = pkgs.mkGodot {
+            inherit version;
             pname = "windows_template";
-            version = "0.1.0";
             src = ./src;
             preset = "windows"; # You need to create this preset in godot
           };
 
           packages.android_template = pkgs.mkGodot {
+            inherit version;
             pname = "android_template";
-            version = "0.1.0";
             src = ./src;
             preset = "android"; # You need to create this preset in godot
           };
