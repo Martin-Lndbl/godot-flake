@@ -26,9 +26,11 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       
-      # Runs a single command using the runners shell
-      - name: Build linux binary + nixos wrapper
-        run: nix build .#nixos_template 
+      - name: Build linux binary
+        run: nix build .#linux_template 
+
+      - name: Build and run nixos wrapper
+        run: nix run .#nixos_template -- --headless --quit
           
       - name: Build windows binary
         run: nix build .#windows_template
