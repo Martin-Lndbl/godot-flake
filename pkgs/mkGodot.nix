@@ -8,8 +8,10 @@
 { pname
 , version
 , src
-, desktopItems ? [ ]
 , preset
+, desktopItems ? [ ]
+, exportMode ? "release" # release / debug / pack
+, exportTemplates ? export_templates # absolute path to the nix store
 }:
 
 stdenv.mkDerivation rec {
@@ -29,11 +31,17 @@ stdenv.mkDerivation rec {
 
     export HOME=$TMPDIR
 
+    # Remove custom_template path if it doesn't point to the nix store
+    sed -i -e \
+      '/custom_template/!b' -e '/\/nix\/store/b' -e 's/"[^"]*"/""/g' -e 't' \
+      export_presets.cfg
+
     mkdir -p /build/.local/share/godot/export_templates/
-    ln -s ${export_templates} /build/.local/share/godot/export_templates/4.2.1.stable
+    ln -s ${exportTemplates} /build/.local/share/godot/export_templates/4.2.1.stable
 
     mkdir -p $out/share/${pname}
-    godot4 --headless --export-release "${preset}" $out/share/${pname}/${pname}
+    godot4 --headless --export-${exportMode} "${preset}" \
+      $out/share/${pname}/${pname}
 
     runHook postBuild
   '';
