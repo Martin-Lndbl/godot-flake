@@ -29,5 +29,3 @@ There are two ways to use custom templates in the nix build process:
 ```
 nix flake init -t github:Martin-Lndbl/godot-flake#
 ```
-
-## WIP - expect breaking changes
