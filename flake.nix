@@ -43,15 +43,7 @@
             preset = "windows"; # You need to create this preset in godot
           };
 
-          packages.android_template = pkgs.mkGodot {
-            inherit version;
-            pname = "android_template";
-            src = ./src;
-            preset = "android"; # You need to create this preset in godot
-          };
-
           packages.export_templates = pkgs.export_templates;
-          packages.makeLibraryPath = pkgs.makeLibraryPath;
 
           devShell = pkgs.mkShell {
 
