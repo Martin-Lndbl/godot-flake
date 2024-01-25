@@ -23,4 +23,11 @@ There are two ways to use custom templates in the nix build process:
     * Invalid paths from `export\_templates.cfg` will be removed automatically
     * This enables building with the editor and `nix build` with the same preset but a different source for custom templates
 
+## Get the template
+* Use this GitHub template to begin your repository
+* Get the template the nix way:
+```
+nix flake init -t github:Martin-Lndbl/godot-flake#
+```
+
 ## WIP - expect breaking changes

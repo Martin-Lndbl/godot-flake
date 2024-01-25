@@ -19,8 +19,11 @@
           version = "0.1.0";
 
         in
-
         rec {
+          apps.nixos_template = flake-utils.lib.mkApp {
+            drv = self.packages.${system}.nixos_template;
+          };
+
           packages.default = packages.nixos_template;
 
           packages.nixos_template = pkgs.mkNixosPatch {
@@ -52,5 +55,11 @@
             ];
           };
         }
-      );
+      ) //
+    {
+      templates.default = {
+        description = "";
+        path = ./.;
+      };
+    };
 }
