@@ -26,6 +26,6 @@ There are two ways to use custom templates in the nix build process:
 ## Get the template
 
                                                                                                        
-| The GitHub way                                    | The nix way:                                       |
+| The GitHub way                                    | The nix way                                        |
 |---------------------------------------------------|----------------------------------------------------|
 | Use this GitHub template to begin your repository |`nix flake init -t github:Martin-Lndbl/godot-flake#`|
