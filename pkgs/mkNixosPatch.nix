@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
     runHook preInstall
 
     mkdir $out
-    mv bin/* bin/${pname}
+    mv bin/* bin/${pname} || true # Rename fails if pname is the same
     cp -r * $out
 
     runHook postInstall
